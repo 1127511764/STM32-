@@ -1,7 +1,7 @@
 #include "MPU9250.h"
 #include "math.h"
 #include "usart1.h"
-#include "Attitude_Algorithm.h"
+#include "CXW_Attitude_Algorithm.h"
 struct _angle angle;
 
 float AQ=0.0005,AR=50,
