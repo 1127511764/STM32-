@@ -1,62 +1,62 @@
 #include "MPU9250.h"
 #include "math.h"
 #include "usart1.h"
-#include "CXW_Attitude_Algorithm.h"
+#include "Attitude_Algorithm.h"
 struct _angle angle;
 
 float AQ=0.0005,AR=50,
 	    Acc_Q=1,Acc_R=50;
 
-float AngleX_Kalman(float X_P,float X_V)//¿¨¶ûÂüÈÚºÏ
+float AngleX_Kalman(float X_P,float X_V)//å¡å°”æ›¼èžåˆ
 {
 	static float  P0_0=0,Kg=0.0,P1_0=0.0001;
 	float X;
-	P1_0=P0_0+AQ;//ÏµÍ³Ð­·½²î
-	Kg=P1_0/(P1_0+AR);//¹Û²âÐ­·½²î
+	P1_0=P0_0+AQ;//ç³»ç»Ÿåæ–¹å·®
+	Kg=P1_0/(P1_0+AR);//è§‚æµ‹åæ–¹å·®
 	X=X_P+(X_V-X_P)*Kg;
 	P0_0=(1-Kg)*P1_0;
 	return X;
 }
 
-float AccX_Kalman(float X_P,float X_V)//¿¨¶ûÂüÈÚºÏ
+float AccX_Kalman(float X_P,float X_V)//å¡å°”æ›¼èžåˆ
 {
 	static float  P0_0=0,Kg=0.0,P1_0=0;
 	float X;
-	P1_0=P0_0+Acc_Q;//ÏµÍ³Ð­·½²î
-	Kg=P1_0/(P1_0+Acc_R);//¹Û²âÐ­·½²î
+	P1_0=P0_0+Acc_Q;//ç³»ç»Ÿåæ–¹å·®
+	Kg=P1_0/(P1_0+Acc_R);//è§‚æµ‹åæ–¹å·®
 	X=X_P+(X_V-X_P)*Kg;
 	P0_0=(1-Kg)*P1_0;
 	return X;
 }
 
 
-float AngleY_Kalman(float X_P,float X_V)//¿¨¶ûÂüÈÚºÏ
+float AngleY_Kalman(float X_P,float X_V)//å¡å°”æ›¼èžåˆ
 {
 	static float  P0_0=0,Kg=0.0,P1_0=0;
 	float X;
-	P1_0=P0_0+AQ;//ÏµÍ³Ð­·½²î
-	Kg=P1_0/(P1_0+AR);//¹Û²âÐ­·½²î
+	P1_0=P0_0+AQ;//ç³»ç»Ÿåæ–¹å·®
+	Kg=P1_0/(P1_0+AR);//è§‚æµ‹åæ–¹å·®
 	X=X_P+(X_V-X_P)*Kg;
 	P0_0=(1-Kg)*P1_0;
 	return X;
 }
-float AccY_Kalman(float X_P,float X_V)//¿¨¶ûÂüÈÚºÏ
+float AccY_Kalman(float X_P,float X_V)//å¡å°”æ›¼èžåˆ
 {
 	static float  P0_0=0,Kg=0.0,P1_0=0;
 	float X;
-	P1_0=P0_0+Acc_Q;//ÏµÍ³Ð­·½²î
-	Kg=P1_0/(P1_0+Acc_R);//¹Û²âÐ­·½²î
+	P1_0=P0_0+Acc_Q;//ç³»ç»Ÿåæ–¹å·®
+	Kg=P1_0/(P1_0+Acc_R);//è§‚æµ‹åæ–¹å·®
 	X=X_P+(X_V-X_P)*Kg;
 	P0_0=(1-Kg)*P1_0;
 	return X;
 }
 
-float AngleZ_Kalman(float X_P,float X_V)//¿¨¶ûÂüÈÚºÏ
+float AngleZ_Kalman(float X_P,float X_V)//å¡å°”æ›¼èžåˆ
 {
 	static float  P0_0=0,Kg=0.0,P1_0=0;
 	float X;
-	P1_0=P0_0+0.006;//ÏµÍ³Ð­·½²î
-	Kg=P1_0/(P1_0+100);//¹Û²âÐ­·½²î
+	P1_0=P0_0+0.006;//ç³»ç»Ÿåæ–¹å·®
+	Kg=P1_0/(P1_0+100);//è§‚æµ‹åæ–¹å·®
 	X=X_P+(X_V-X_P)*Kg;
 	P0_0=(1-Kg)*P1_0;
 	return X;
@@ -65,7 +65,7 @@ float AngleZ_Kalman(float X_P,float X_V)//¿¨¶ûÂüÈÚºÏ
 float AX=0,AY=0,GX=0,GY=0,GZ=0,Accp_X=0,Accp_Y=0,Acc_X,Acc_Y;
 void Get_Angle(void)
 {
-	static char Get_Angle_f=0;//Ê×´ÎÖ´ÐÐ±êÖ¾Î»
+	static char Get_Angle_f=0;//é¦–æ¬¡æ‰§è¡Œæ ‡å¿—ä½
 	static float dt=0.00250000;
 	if(Get_Angle_f==0)
 	{
@@ -102,8 +102,8 @@ void Get_Angle(void)
 	AX=-asinf(Acc_X)*57.324841;
 	AY=-asinf(Acc_Y)*57.324841;
 
-	angle.pitch=AngleX_Kalman(GX,AX);//×îÓÅ½Ç¶ÈÈÚºÏ
-	angle.roll =AngleY_Kalman(GY,AY);//×îÓÅ½Ç¶ÈÈÚºÏ
+	angle.pitch=AngleX_Kalman(GX,AX);//æœ€ä¼˜è§’åº¦èžåˆ
+	angle.roll =AngleY_Kalman(GY,AY);//æœ€ä¼˜è§’åº¦èžåˆ
 	
 	if(my>=0&&mx>=0)
 	{
